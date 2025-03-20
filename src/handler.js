@@ -4,10 +4,11 @@ const notes = require("./notes");
 const addNoteHandler = (request, h) => {
   const { title, tags, body } = request.payload;
   const id = nanoid(16);
-  const createAt = new Date().toLocaleString();
+  const createAt = new Date().toISOString();
   const updateAt = createAt;
 
   const newNote = {
+    id,
     title,
     tags,
     body,
@@ -22,9 +23,9 @@ const addNoteHandler = (request, h) => {
   if (isSuccess) {
     const response = h.response({
       status: "success",
-      message: "Catatan Berhasil Ditambahkan",
+      message: "Catatan berhasil ditambahkan",
       data: {
-        note: id,
+        noteId: id,
       },
     });
     response.code(201);
@@ -33,13 +34,17 @@ const addNoteHandler = (request, h) => {
 
   const response = h.response({
     status: "fail",
-    message: "Catatan Gagal Ditambahkan",
-    data: {
-      note: id,
-    },
+    message: "Catatan gagal ditambahkan",
   });
   response.code(500);
   return response;
 };
 
-module.exports = { addNoteHandler };
+const getAllNotesHandler = () => ({
+  status: "success",
+  data: {
+    notes,
+  },
+});
+
+module.exports = { addNoteHandler, getAllNotesHandler };
